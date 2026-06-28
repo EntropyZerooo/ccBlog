@@ -4,14 +4,14 @@ import BlogSidebar from "@components/blog/BlogSidebar.astro";
 import PostPreview from "@components/blog/PostPreview.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import type { CollectionEntry } from "astro:content";
-import type { GetStaticPaths, Page } from "astro";
+import type { GetStaticPaths } from "astro";
 import { blogCategories, blogPageSize } from "@/config";
 import type { BlogCategoryConfig } from "@/types/config";
 import { getSortedPosts } from "@/utils/content-utils";
 import type { Tag } from "@/utils/content-utils";
 import { url } from "@/utils/url-utils";
 
-export const getStaticPaths = (async ({ paginate }) => {
+export const getStaticPaths = (async () => {
 	const sortedPosts = await getSortedPosts();
 
 	return blogCategories.flatMap((catConfig, index) => {
@@ -32,38 +32,73 @@ export const getStaticPaths = (async ({ paginate }) => {
 			.map(([name, count]) => ({ name, count }))
 			.sort((a, b) => a.name.localeCompare(b.name));
 
-		return paginate(posts, {
-			params: { category: catConfig.slug },
-			pageSize: blogPageSize,
-			props: {
-				catConfig,
-				prevCat,
-				nextCat,
-				uniqueTags,
-				totalInCategory: posts.length,
-			},
+		const lastPage = Math.max(1, Math.ceil(posts.length / blogPageSize));
+
+		return Array.from({ length: lastPage }, (_, i) => {
+			const currentPage = i + 1;
+			const pagePosts = posts.slice(
+				i * blogPageSize,
+				(i + 1) * blogPageSize,
+			);
+
+			return {
+				params: {
+					category: catConfig.slug,
+					...(currentPage > 1 ? { page: String(currentPage) } : {}),
+				},
+				props: {
+					catConfig,
+					prevCat,
+					nextCat,
+					uniqueTags,
+					totalInCategory: posts.length,
+					pagePosts,
+					currentPage,
+					lastPage,
+				},
+			};
 		});
 	});
 }) satisfies GetStaticPaths;
 
 interface Props {
-	page: Page<CollectionEntry<"posts">>;
 	catConfig: BlogCategoryConfig;
 	prevCat: BlogCategoryConfig;
 	nextCat: BlogCategoryConfig;
 	uniqueTags: Tag[];
 	totalInCategory: number;
+	pagePosts: CollectionEntry<"posts">[];
+	currentPage: number;
+	lastPage: number;
 }
 
-const { page, catConfig, prevCat, nextCat, uniqueTags, totalInCategory } =
-	Astro.props;
+const {
+	catConfig,
+	prevCat,
+	nextCat,
+	uniqueTags,
+	totalInCategory,
+	pagePosts,
+	currentPage,
+	lastPage,
+} = Astro.props;
+
+function categoryBlogUrl(slug: string, page = 1): string {
+	return page <= 1 ? `/blog/${slug}/` : `/blog/${slug}/${page}/`;
+}
 
 const pageUrl = {
-	current: page.url.current,
-	prev: page.url.prev,
-	next: page.url.next,
-	first: page.url.first,
-	last: page.url.last,
+	current: categoryBlogUrl(catConfig.slug, currentPage),
+	prev:
+		currentPage > 1
+			? categoryBlogUrl(catConfig.slug, currentPage - 1)
+			: undefined,
+	next:
+		currentPage < lastPage
+			? categoryBlogUrl(catConfig.slug, currentPage + 1)
+			: undefined,
+	first: categoryBlogUrl(catConfig.slug, 1),
+	last: categoryBlogUrl(catConfig.slug, lastPage),
 };
 ---
 
@@ -116,14 +151,14 @@ const pageUrl = {
 		</div>
 
 		{
-			page.data.length === 0 ? (
+			pagePosts.length === 0 ? (
 				<p class="text-muted-foreground">暂无文章。</p>
 			) : (
 				<div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
 					<section aria-label="Blog posts list" id="content" class="animate">
 						<div class="mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row gap-2">
 							<span class="text-muted-foreground">
-								Page {page.currentPage} - Showing {page.data.length} of{" "}
+								Page {currentPage} - Showing {pagePosts.length} of{" "}
 								{totalInCategory} posts
 							</span>
 							<a
@@ -135,13 +170,13 @@ const pageUrl = {
 							</a>
 						</div>
 						<ul class="flex flex-col gap-y-4 text-start">
-							{page.data.map((entry) => (
+							{pagePosts.map((entry) => (
 								<PostPreview entry={entry} />
 							))}
 						</ul>
 						<BlogPaginator
-							currentPage={page.currentPage}
-							lastPage={page.lastPage}
+							currentPage={currentPage}
+							lastPage={lastPage}
 							url={pageUrl}
 						/>
 					</section>

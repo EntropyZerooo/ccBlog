@@ -29,8 +29,8 @@ export default defineConfig({
 	// 支持从环境变量读取 site URL，如果没有则使用默认值
 	// 对于 GitHub Pages: https://<username>.github.io/<repository>/
 	// 对于自定义域名: https://yourdomain.com/
-	site: process.env.SITE_URL || "https://cjun666.github.io/DailyQuestion/",
-	base: process.env.BASE_PATH || "/DailyQuestion/",
+	site: process.env.SITE_URL || "http://localhost:4321/",
+	base: process.env.BASE_PATH || "/",
 	outDir: "dist",
 	trailingSlash: "always",
 	integrations: [
