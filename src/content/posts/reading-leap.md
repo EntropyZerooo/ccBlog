@@ -4,6 +4,7 @@ published: 2025-06-22
 description: 古典与战略、联机学习与系统破局——古典谈如何用杠杆实现非线性成长。
 tags: [阅读, 个人成长, 认知, 古典]
 category: 阅读心得
+image: /images/covers/reading-leap.jpg
 draft: false
 ---
 

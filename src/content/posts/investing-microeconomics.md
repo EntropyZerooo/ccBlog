@@ -4,6 +4,7 @@ published: 2026-01-10
 description: 曼昆经典教材框架——从十大原理到供给需求、成本与弹性。
 tags: [投资, 经济学, 微观经济, 曼昆]
 category: 投资心得
+image: /images/covers/investing-microeconomics.jpg
 draft: false
 ---
 

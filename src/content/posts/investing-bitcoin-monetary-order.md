@@ -4,6 +4,7 @@ published: 2025-10-12
 description: 货币的可销售性、库存流量比、健全货币与时间偏好——从货币史理解比特币的逻辑。
 tags: [投资, 比特币, 货币, 奥派经济学]
 category: 投资心得
+image: /images/covers/investing-bitcoin-monetary-order.jpg
 draft: false
 ---
 

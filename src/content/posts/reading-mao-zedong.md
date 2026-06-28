@@ -4,6 +4,7 @@ published: 2026-04-03
 description: 求学、建党、井冈山、长征、抗战与建国——用一条时间线梳理人物与时代的互动。
 tags: [阅读, 历史, 传记, 罗斯·特里尔]
 category: 阅读心得
+image: /images/covers/reading-mao-zedong.jpg
 draft: false
 ---
 

@@ -4,6 +4,7 @@ published: 2025-09-08
 description: 卡尼曼谈直觉与理性、锚定与损失厌恶——决策里最常见的认知偏误。
 tags: [阅读, 心理学, 决策, 丹尼尔·卡尼曼]
 category: 阅读心得
+image: /images/covers/reading-thinking-fast-slow.jpg
 draft: false
 ---
 

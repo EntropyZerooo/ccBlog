@@ -4,6 +4,7 @@ published: 2025-12-05
 description: 产权、机会成本、边际思维与利润——托马斯·索维尔的经济学直觉框架。
 tags: [投资, 经济学, 思维方式, 托马斯·索维尔]
 category: 投资心得
+image: /images/covers/investing-economic-thinking.jpg
 draft: false
 ---
 

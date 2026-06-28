@@ -4,6 +4,7 @@ published: 2025-12-18
 description: BCG 经典型、适应型、愿景型、塑造型与重塑型——用环境可预测/可塑造矩阵选战略。
 tags: [阅读, 战略, 管理, BCG]
 category: 阅读心得
+image: /images/covers/reading-strategy-dna.jpg
 draft: false
 ---
 

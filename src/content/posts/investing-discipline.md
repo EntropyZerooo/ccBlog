@@ -4,6 +4,7 @@ published: 2026-03-05
 description: 不预测市场，用规则约束情绪——仅为个人记录，不构成投资建议。
 tags: [投资, 定投, 纪律]
 category: 投资心得
+image: /images/covers/investing-discipline.jpg
 draft: false
 ---
 

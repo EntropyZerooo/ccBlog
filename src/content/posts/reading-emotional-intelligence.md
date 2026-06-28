@@ -4,6 +4,7 @@ published: 2025-10-25
 description: 情绪大脑、自我管理与社交艺术——戈尔曼谈情绪智力在婚姻与职场中的运用。
 tags: [阅读, 心理学, 情商, 丹尼尔·戈尔曼]
 category: 阅读心得
+image: /images/covers/reading-emotional-intelligence.jpg
 draft: false
 ---
 

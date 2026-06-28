@@ -4,6 +4,7 @@ published: 2025-08-10
 description: 目的论、课题分离、共同体感觉——用阿德勒心理学重新理解自由与关系。
 tags: [阅读, 心理学, 阿德勒, 岸见一郎]
 category: 阅读心得
+image: /images/covers/reading-courage-to-be-disliked.jpg
 draft: false
 ---
 

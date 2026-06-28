@@ -4,6 +4,7 @@ published: 2026-03-25
 description: 凯文·凯利谈复杂系统、去中心化与「活」的系统——科技向生物学学习。
 tags: [阅读, 科技, 复杂系统, 凯文·凯利]
 category: 阅读心得
+image: /images/covers/reading-out-of-control.jpg
 draft: false
 ---
 

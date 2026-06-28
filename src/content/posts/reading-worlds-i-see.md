@@ -4,6 +4,7 @@ published: 2026-05-05
 description: 李飞飞回忆录——移民、科学好奇与计算机视觉如何改变 AI 的看见方式。
 tags: [阅读, 人工智能, 计算机视觉, 李飞飞]
 category: 阅读心得
+image: /images/covers/reading-worlds-i-see.jpg
 draft: false
 ---
 

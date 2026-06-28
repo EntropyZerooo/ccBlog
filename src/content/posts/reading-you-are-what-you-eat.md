@@ -4,6 +4,7 @@ published: 2025-09-20
 description: 碳水、蛋白、脂肪、维生素、矿物质、膳食纤维与水——用营养结构理解慢性病。
 tags: [阅读, 健康, 营养, 夏萌]
 category: 阅读心得
+image: /images/covers/reading-you-are-what-you-eat.jpg
 draft: false
 ---
 

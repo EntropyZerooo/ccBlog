@@ -4,6 +4,7 @@ published: 2025-07-05
 description: 心理免疫、舒适区、小步子原理与成长型思维——陈海贤谈自我改变的工具箱。
 tags: [阅读, 心理学, 自我成长, 陈海贤]
 category: 阅读心得
+image: /images/covers/reading-great-me.jpg
 draft: false
 ---
 

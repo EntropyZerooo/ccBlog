@@ -4,6 +4,7 @@ published: 2025-08-27
 description: 克里特与迈锡尼、荷马史诗、城邦制度与民主改革——梳理古希腊文明的来路与精神。
 tags: [阅读, 历史, 古希腊, 赵林]
 category: 阅读心得
+image: /images/covers/reading-ancient-greece.jpg
 draft: false
 ---
 

@@ -4,6 +4,7 @@ published: 2026-02-20
 description: 形成、知化、流动、屏读、使用、共享——理解技术演进的十二个关键词。
 tags: [阅读, 科技, 未来趋势, 凯文·凯利]
 category: 阅读心得
+image: /images/covers/reading-inevitable.jpg
 draft: false
 ---
 

@@ -4,6 +4,7 @@ published: 2025-11-22
 description: CPI、实际利率、信用利差与 VIX——一套美股宏观观察与板块轮动框架。
 tags: [投资, 宏观, 美股, 资产配置]
 category: 投资心得
+image: /images/covers/investing-macro-framework.jpg
 draft: false
 ---
 

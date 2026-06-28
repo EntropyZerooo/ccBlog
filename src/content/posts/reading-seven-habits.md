@@ -4,6 +4,7 @@ published: 2025-07-18
 description: 积极主动、影响圈与个人使命宣言——柯维经典习惯框架，附一段真实的自我追问。
 tags: [阅读, 习惯, 效能, 史蒂芬·柯维]
 category: 阅读心得
+image: /images/covers/reading-seven-habits.jpg
 draft: false
 ---
 

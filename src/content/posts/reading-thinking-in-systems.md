@@ -4,6 +4,7 @@ published: 2025-08-18
 description: 德内拉·梅多斯谈系统思维——存量流量、反馈回路与杠杆点。
 tags: [阅读, 系统思维, 复杂系统, 德内拉·梅多斯]
 category: 阅读心得
+image: /images/covers/reading-thinking-in-systems.jpg
 draft: false
 ---
 

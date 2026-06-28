@@ -4,6 +4,7 @@ published: 2025-11-08
 description: 从王政、共和国到东西罗马与奥斯曼——用五个阶段理解罗马两千年的变局。
 tags: [阅读, 历史, 罗马]
 category: 阅读心得
+image: /images/covers/reading-roman-era.jpg
 draft: false
 ---
 

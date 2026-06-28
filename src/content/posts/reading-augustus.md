@@ -4,6 +4,7 @@ published: 2026-01-20
 description: 后三头同盟、与安东尼的博弈、以及帝制巩固——共和国末期的权力逻辑。
 tags: [阅读, 历史, 罗马, 奥古斯都]
 category: 阅读心得
+image: /images/covers/reading-augustus.jpg
 draft: false
 ---
 

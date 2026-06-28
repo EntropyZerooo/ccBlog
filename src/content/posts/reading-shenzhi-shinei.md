@@ -4,6 +4,7 @@ published: 2026-03-10
 description: 地方政府、土地财政与产业政策——用一本书串起宏观叙事。
 tags: [阅读, 经济, 兰小欢]
 category: 阅读心得
+image: /images/covers/reading-shenzhi-shinei.jpg
 draft: false
 ---
 

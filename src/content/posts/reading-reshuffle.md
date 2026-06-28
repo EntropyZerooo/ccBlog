@@ -4,6 +4,7 @@ published: 2026-06-27
 description: 协调成本、隐性知识显性化与工作重组——AI 时代的企业操作系统逻辑。
 tags: [阅读, 人工智能, 组织, 商业]
 category: 阅读心得
+image: /images/covers/reading-reshuffle.jpg
 draft: false
 ---
 

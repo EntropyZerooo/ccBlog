@@ -4,6 +4,7 @@ published: 2026-03-15
 description: 小步提交、先写测试边界、代码审查前先自己读一遍 diff。
 tags: [编程, 习惯, 工程实践]
 category: 技术心得
+image: /images/covers/coding-habits.jpg
 draft: false
 ---
 

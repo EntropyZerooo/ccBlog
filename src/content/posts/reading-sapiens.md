@@ -4,6 +4,7 @@ published: 2025-06-15
 description: 从采集、农业、工业到信息社会——用一条时间线串起人类演化的四个阶段。
 tags: [阅读, 历史, 尤瓦尔·赫拉利]
 category: 阅读心得
+image: /images/covers/reading-sapiens.jpg
 draft: false
 ---
 

@@ -4,6 +4,7 @@ published: 2026-06-15
 description: 从兴中会到同盟会，从六次失败到辛亥革命——一位革命家的漫长试错。
 tags: [阅读, 历史, 传记, 孙中山]
 category: 阅读心得
+image: /images/covers/reading-sun-yat-sen.jpg
 draft: false
 ---
 
