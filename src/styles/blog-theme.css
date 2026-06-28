@@ -1,0 +1,249 @@
+/* 博客视觉增强：动态光斑层（背景渐变见 axi-theme.css） */
+
+body {
+	background: transparent !important;
+	font-family: inherit;
+}
+
+/* ── 动态背景层 ── */
+#site-bg {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.bg-orb {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(90px);
+	opacity: 0.55;
+	animation: orb-float 22s ease-in-out infinite;
+}
+
+.bg-orb-1 {
+	width: min(55vw, 520px);
+	height: min(55vw, 520px);
+	top: -12%;
+	left: -8%;
+	background: oklch(0.65 0.14 var(--hue, 200));
+	animation-delay: 0s;
+}
+
+.bg-orb-2 {
+	width: min(45vw, 420px);
+	height: min(45vw, 420px);
+	top: 35%;
+	right: -10%;
+	background: oklch(0.58 0.12 calc(var(--hue, 200) + 40));
+	animation-delay: -7s;
+	animation-duration: 26s;
+}
+
+.bg-orb-3 {
+	width: min(40vw, 380px);
+	height: min(40vw, 380px);
+	bottom: -5%;
+	left: 25%;
+	background: oklch(0.62 0.11 calc(var(--hue, 200) - 25));
+	animation-delay: -14s;
+	animation-duration: 30s;
+}
+
+html:not(.dark) .bg-orb {
+	opacity: 0.4;
+	filter: blur(100px);
+}
+
+html.dark .bg-orb {
+	opacity: 0.35;
+	filter: blur(110px);
+}
+
+.bg-grid {
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(128, 128, 160, 0.06) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(128, 128, 160, 0.06) 1px, transparent 1px);
+	background-size: 48px 48px;
+	mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 20%, transparent 70%);
+}
+
+html.dark .bg-grid {
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+@keyframes orb-float {
+	0%,
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+	33% {
+		transform: translate(3%, 4%) scale(1.05);
+	}
+	66% {
+		transform: translate(-2%, 2%) scale(0.96);
+	}
+}
+
+/* ── 玻璃态卡片 ── */
+.card-base {
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	box-shadow:
+		0 4px 24px rgba(0, 0, 0, 0.04),
+		0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+html.dark .card-base {
+	background: oklch(0.22 0.02 var(--hue, 265) / 0.72) !important;
+	border-color: rgba(255, 255, 255, 0.08);
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.35),
+		0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+html:not(.dark) .card-base {
+	background: rgba(255, 255, 255, 0.72) !important;
+}
+
+/* ── 导航栏 ── */
+#navbar .card-base {
+	backdrop-filter: blur(20px);
+	border-radius: 0 0 1rem 1rem !important;
+}
+
+.nav-pill {
+	position: relative;
+	padding: 0.45rem 1.1rem;
+	border-radius: 9999px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	transition: all 0.25s ease;
+	border: 1px solid transparent;
+}
+
+.nav-pill-tech {
+	color: oklch(0.45 0.14 240);
+	background: oklch(0.92 0.06 240 / 0.7);
+	border-color: oklch(0.75 0.1 240 / 0.4);
+}
+
+.nav-pill-tech:hover {
+	background: oklch(0.88 0.1 240 / 0.9);
+	box-shadow: 0 0 20px oklch(0.7 0.15 240 / 0.35);
+	transform: translateY(-1px);
+}
+
+html.dark .nav-pill-tech {
+	color: oklch(0.82 0.12 240);
+	background: oklch(0.28 0.06 240 / 0.5);
+	border-color: oklch(0.5 0.1 240 / 0.3);
+}
+
+.nav-pill-invest {
+	color: oklch(0.48 0.14 85);
+	background: oklch(0.94 0.06 85 / 0.7);
+	border-color: oklch(0.78 0.1 85 / 0.4);
+}
+
+.nav-pill-invest:hover {
+	background: oklch(0.9 0.1 85 / 0.9);
+	box-shadow: 0 0 20px oklch(0.75 0.14 85 / 0.35);
+	transform: translateY(-1px);
+}
+
+html.dark .nav-pill-invest {
+	color: oklch(0.85 0.12 85);
+	background: oklch(0.28 0.05 85 / 0.45);
+	border-color: oklch(0.55 0.1 85 / 0.25);
+}
+
+.nav-pill-read {
+	color: oklch(0.48 0.16 320);
+	background: oklch(0.93 0.06 320 / 0.7);
+	border-color: oklch(0.76 0.1 320 / 0.4);
+}
+
+.nav-pill-read:hover {
+	background: oklch(0.88 0.1 320 / 0.9);
+	box-shadow: 0 0 20px oklch(0.7 0.15 320 / 0.35);
+	transform: translateY(-1px);
+}
+
+html.dark .nav-pill-read {
+	color: oklch(0.84 0.12 320);
+	background: oklch(0.28 0.06 320 / 0.45);
+	border-color: oklch(0.52 0.1 320 / 0.3);
+}
+
+/* ── 文章卡片 ── */
+.post-card-glass {
+	transition:
+		transform 0.3s ease,
+		box-shadow 0.3s ease,
+		border-color 0.3s ease;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+html.dark .post-card-glass {
+	border-color: rgba(255, 255, 255, 0.06);
+}
+
+.post-card-glass:hover {
+	transform: translateY(-4px);
+	box-shadow:
+		0 16px 40px rgba(0, 0, 0, 0.08),
+		0 0 0 1px oklch(0.7 0.12 var(--hue, 265) / 0.25);
+}
+
+html.dark .post-card-glass:hover {
+	box-shadow:
+		0 16px 48px rgba(0, 0, 0, 0.45),
+		0 0 0 1px oklch(0.65 0.14 var(--hue, 265) / 0.35);
+}
+
+.category-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.15rem 0.65rem;
+	border-radius: 9999px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	margin-bottom: 0.75rem;
+}
+
+.category-badge-tech {
+	background: oklch(0.92 0.06 240 / 0.8);
+	color: oklch(0.42 0.14 240);
+}
+
+.category-badge-invest {
+	background: oklch(0.93 0.06 85 / 0.8);
+	color: oklch(0.45 0.14 85);
+}
+
+.category-badge-read {
+	background: oklch(0.92 0.06 320 / 0.8);
+	color: oklch(0.42 0.16 320);
+}
+
+html.dark .category-badge-tech {
+	background: oklch(0.3 0.06 240 / 0.6);
+	color: oklch(0.82 0.1 240);
+}
+
+html.dark .category-badge-invest {
+	background: oklch(0.3 0.05 85 / 0.55);
+	color: oklch(0.85 0.1 85);
+}
+
+html.dark .category-badge-read {
+	background: oklch(0.3 0.06 320 / 0.55);
+	color: oklch(0.84 0.12 320);
+}

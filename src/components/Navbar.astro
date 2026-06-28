@@ -1,0 +1,186 @@
+---
+import { Icon } from "astro-icon/components";
+import {
+	blogCategories,
+	navBarConfig,
+	profileConfig,
+	siteConfig,
+} from "../config";
+import { LinkPresets } from "../constants/link-presets";
+import { LinkPreset, type NavBarLink } from "../types/config";
+import { url } from "../utils/url-utils";
+import LightDarkSwitch from "./LightDarkSwitch.svelte";
+import Search from "./Search.svelte";
+import NavMenuPanel from "./widget/NavMenuPanel.astro";
+
+const currentPath = Astro.url.pathname;
+
+let links: NavBarLink[] = navBarConfig.links.map(
+	(item: NavBarLink | LinkPreset): NavBarLink => {
+		if (typeof item === "number") {
+			return LinkPresets[item];
+		}
+		return item;
+	},
+);
+
+const blogLink = links.find((l) => l.dropdown);
+const otherLinks = links.filter((l) => !l.dropdown);
+const githubLink = profileConfig.links.find((l) => l.name === "GitHub");
+---
+
+<div id="navbar" class="onload-animation">
+	<header class="axi-header" id="axi-header">
+		<div class="axi-header-left">
+			<a href={url("/")} class="axi-brand" aria-label="Home">
+				{siteConfig.title}
+			</a>
+		</div>
+
+		<nav class="axi-header-center hidden md:flex items-center justify-center gap-1">
+			{
+				blogLink && (
+					<div class="axi-dropdown">
+						<a
+							href={url(blogLink.url)}
+							class="axi-nav-link inline-flex items-center gap-1"
+							aria-label="Blog menu"
+						>
+							{blogLink.name}
+							<Icon
+								name="material-symbols:keyboard-arrow-down-rounded"
+								class="text-lg"
+							/>
+						</a>
+						<div class="axi-dropdown-menu">
+							{blogCategories.map((cat) => {
+								const catPath = url(`/blog/${cat.slug}/`);
+								const isActive = currentPath.includes(
+									`/blog/${cat.slug}`,
+								);
+								return (
+									<a
+										href={catPath}
+										class:list={[
+											"axi-dropdown-item",
+											isActive && "is-active",
+										]}
+									>
+										{cat.name}
+									</a>
+								);
+							})}
+						</div>
+					</div>
+				)
+			}
+			{
+				otherLinks.map((l) => (
+					<a
+						href={l.external ? l.url : url(l.url)}
+						target={l.external ? "_blank" : undefined}
+						class="axi-nav-link"
+					>
+						{l.name}
+					</a>
+				))
+			}
+		</nav>
+
+		<div class="axi-header-right">
+			<Search client:load />
+			{
+				githubLink && (
+					<a
+						href={githubLink.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="btn-plain hidden sm:flex rounded-lg w-10 h-10 items-center justify-center shrink-0"
+						aria-label="GitHub"
+					>
+						<Icon name="fa6-brands:github" class="text-xl" />
+					</a>
+				)
+			}
+			<LightDarkSwitch client:load />
+			<button
+				aria-label="Menu"
+				class="btn-plain rounded-lg w-10 h-10 md:hidden shrink-0"
+				id="nav-menu-switch"
+			>
+				<Icon name="material-symbols:menu-rounded" class="text-xl" />
+			</button>
+		</div>
+
+		<NavMenuPanel
+			links={[
+				...blogCategories.map((c) => ({
+					name: c.name,
+					url: `/blog/${c.slug}/`,
+				})),
+				...otherLinks,
+			]}
+		/>
+	</header>
+</div>
+
+<script>
+	function initHeaderScroll() {
+		const header = document.getElementById("axi-header");
+		if (!header) return;
+
+		const onScroll = () => {
+			header.classList.toggle("is-scrolled", window.scrollY > 8);
+		};
+		onScroll();
+		window.addEventListener("scroll", onScroll, { passive: true });
+	}
+
+	function initMenu() {
+		const menuBtn = document.getElementById("nav-menu-switch");
+		menuBtn?.addEventListener("click", () => {
+			document
+				.getElementById("nav-menu-panel")
+				?.classList.toggle("float-panel-closed");
+		});
+	}
+
+	function init() {
+		initHeaderScroll();
+		initMenu();
+	}
+
+	init();
+	document.addEventListener("astro:after-swap", () => setTimeout(init, 50));
+</script>
+
+{
+	import.meta.env.PROD && (
+		<script
+			is:inline
+			define:vars={{ scriptUrl: url("/pagefind/pagefind.js") }}
+		>
+			async function loadPagefind() {
+				try {
+					const response = await fetch(scriptUrl, { method: "HEAD" });
+					if (!response.ok) throw new Error("Pagefind not found");
+					const pagefind = await import(scriptUrl);
+					await pagefind.options({ excerptLength: 20 });
+					window.pagefind = pagefind;
+					document.dispatchEvent(new CustomEvent("pagefindready"));
+				} catch {
+					window.pagefind = {
+						search: () => Promise.resolve({ results: [] }),
+						options: () => Promise.resolve(),
+					};
+					document.dispatchEvent(new CustomEvent("pagefindloaderror"));
+				}
+			}
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", loadPagefind);
+			} else {
+				loadPagefind();
+			}
+		</script>
+	)
+}

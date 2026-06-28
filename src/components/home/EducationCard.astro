@@ -1,0 +1,21 @@
+---
+import type { EducationEntry } from "@/types/config";
+
+interface Props extends EducationEntry {}
+
+const { heading, subheading, date, href } = Astro.props;
+const Tag = href ? "a" : "div";
+---
+
+<Tag
+	class="axi-edu-card group block"
+	href={href}
+	target={href ? "_blank" : undefined}
+	rel={href ? "noopener noreferrer" : undefined}
+>
+	<h3 class="font-semibold text-base group-hover:text-[var(--primary)] transition-colors">
+		{heading}
+	</h3>
+	<p class="text-sm text-[var(--axi-muted)] mt-1">{subheading}</p>
+	<p class="text-xs text-[var(--axi-muted)] mt-2">{date}</p>
+</Tag>

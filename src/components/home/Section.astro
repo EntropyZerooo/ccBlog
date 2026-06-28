@@ -1,0 +1,15 @@
+---
+interface Props {
+	title: string;
+	class?: string;
+}
+
+const { title, class: className } = Astro.props;
+---
+
+<section class:list={["axi-home-section", className]}>
+	<h2 class="axi-home-section-label">{title}</h2>
+	<div class="axi-home-section-body">
+		<slot />
+	</div>
+</section>

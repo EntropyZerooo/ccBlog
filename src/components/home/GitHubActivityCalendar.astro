@@ -1,0 +1,222 @@
+---
+import {
+	differenceInCalendarDays,
+	eachDayOfInterval,
+	formatISO,
+	getDay,
+	getMonth,
+	getYear,
+	nextDay,
+	parseISO,
+	subWeeks,
+} from "date-fns";
+
+interface GitHubActivityDay {
+	date: string;
+	count: number;
+	level: number;
+}
+
+interface GitHubActivityApiResponse {
+	contributions: GitHubActivityDay[];
+	total: {
+		lastYear: number;
+		[year: string]: number;
+	};
+}
+
+interface Props {
+	username: string;
+}
+
+async function fetchData(username: string): Promise<GitHubActivityApiResponse> {
+	const apiUrl = "https://github-contributions-api.jogruber.de/v4/";
+	const response = await fetch(`${apiUrl}${username}?y=last`);
+	const data = (await response.json()) as GitHubActivityApiResponse;
+	if (!response.ok) {
+		throw new Error(
+			`Fetching GitHub contribution data for "${username}" failed`,
+		);
+	}
+	return data;
+}
+
+function fillHoles(activities: GitHubActivityDay[]): GitHubActivityDay[] {
+	const calendar = new Map(activities.map((a) => [a.date, a]));
+	const firstActivity = activities[0];
+	const lastActivity = activities[activities.length - 1];
+
+	return eachDayOfInterval({
+		start: parseISO(firstActivity.date),
+		end: parseISO(lastActivity.date),
+	}).map((day) => {
+		const date = formatISO(day, { representation: "date" });
+		return calendar.get(date) ?? { date, count: 0, level: 0 };
+	});
+}
+
+function groupByWeeks(activities: GitHubActivityDay[]) {
+	const normalized = fillHoles(activities);
+	const firstDate = parseISO(normalized[0].date);
+	const firstCalendarDate =
+		getDay(firstDate) === 0 ? firstDate : subWeeks(nextDay(firstDate, 0), 1);
+	const padded = [
+		...(Array(differenceInCalendarDays(firstDate, firstCalendarDate)).fill(
+			undefined,
+		) as Array<GitHubActivityDay | undefined>),
+		...normalized,
+	];
+	const numberOfWeeks = Math.ceil(padded.length / 7);
+	return [...Array(numberOfWeeks).keys()].map((i) =>
+		padded.slice(i * 7, i * 7 + 7),
+	);
+}
+
+function getMonthLabels(weeks: Array<Array<GitHubActivityDay | undefined>>) {
+	const monthNames = [
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec",
+	];
+	return weeks.reduce<{ weekIndex: number; label: string }[]>(
+		(labels, week, weekIndex) => {
+			const firstActivity = week.find((a) => a);
+			if (!firstActivity) return labels;
+			const month = monthNames[getMonth(parseISO(firstActivity.date))];
+			if (weekIndex === 0 || labels.at(-1)?.label !== month) {
+				labels.push({ weekIndex, label: month });
+			}
+			return labels;
+		},
+		[],
+	);
+}
+
+const levelClass: Record<number, string> = {
+	0: "gh-level-0",
+	1: "gh-level-1",
+	2: "gh-level-2",
+	3: "gh-level-3",
+	4: "gh-level-4",
+};
+
+const { username } = Astro.props;
+let data: GitHubActivityApiResponse | null = null;
+let fetchError = false;
+try {
+	data = await fetchData(username);
+} catch {
+	fetchError = true;
+}
+
+const hasData = data && data.contributions.length > 0;
+let activities: GitHubActivityDay[] = [];
+let totalCount = 0;
+let activityYear = new Date().getFullYear();
+let weeks: Array<Array<GitHubActivityDay | undefined>> = [];
+let monthLabels: { weekIndex: number; label: string }[] = [];
+let width = 0;
+let height = 0;
+
+if (hasData && data) {
+	activities = data.contributions;
+	totalCount = data.total.lastYear;
+	activityYear = getYear(parseISO(activities[0].date));
+
+	const blockSize = 12;
+	const blockMargin = 4;
+	const fontSize = 14;
+	const labelMargin = 8;
+	const labelHeight = fontSize + labelMargin;
+	weeks = groupByWeeks(activities);
+	width = weeks.length * (blockSize + blockMargin) - blockMargin;
+	height = labelHeight + (blockSize + blockMargin) * 7 - blockMargin;
+	monthLabels = getMonthLabels(weeks);
+}
+
+const blockSize = 12;
+const blockMargin = 4;
+const blockRadius = 2;
+const fontSize = 14;
+const labelMargin = 8;
+const labelHeight = fontSize + labelMargin;
+---
+
+{
+	hasData ? (
+		<div>
+			<div class="overflow-x-auto w-full" style="max-width: 100%;">
+				<svg
+					class="block"
+					width={width}
+					height={height}
+					viewBox={`0 0 ${width} ${height}`}
+				>
+					<g>
+						{monthLabels.map(({ label, weekIndex }) => (
+							<text
+								x={(blockSize + blockMargin) * weekIndex}
+								y={0}
+								dominant-baseline="hanging"
+								fill="currentColor"
+								font-size={fontSize}
+							>
+								{label}
+							</text>
+						))}
+					</g>
+					{weeks.map((week, wi) => (
+						<g transform={`translate(${(blockSize + blockMargin) * wi}, 0)`}>
+							{week.map((activity, di) =>
+								activity ? (
+									<rect
+										class:list={["gh-cell", levelClass[activity.level]]}
+										x={0}
+										y={labelHeight + (blockSize + blockMargin) * di}
+										width={blockSize}
+										height={blockSize}
+										rx={blockRadius}
+										ry={blockRadius}
+									>
+										<title>{`${activity.count} contributions on ${activity.date}`}</title>
+									</rect>
+								) : null,
+							)}
+						</g>
+					))}
+				</svg>
+			</div>
+			<footer class="flex flex-wrap items-center justify-between gap-2 text-sm text-[var(--axi-muted)] mt-2">
+				<div>
+					{totalCount} contributions in {activityYear} ~ {activityYear + 1}
+				</div>
+				<div class="flex items-center gap-1">
+					<span>Less</span>
+					{[0, 1, 2, 3, 4].map((level) => (
+						<svg width={blockSize} height={blockSize}>
+							<rect
+								width={blockSize}
+								height={blockSize}
+								rx={blockRadius}
+								ry={blockRadius}
+								class:list={["gh-cell", levelClass[level]]}
+							/>
+						</svg>
+					))}
+					<span>More</span>
+				</div>
+			</footer>
+		</div>
+	) : fetchError ? (
+		<p class="text-sm text-[var(--axi-muted)]">无法加载 GitHub 贡献数据</p>
+	) : null
+}

@@ -1,0 +1,51 @@
+---
+import BlogStats from "@components/home/BlogStats.astro";
+import EducationCard from "@components/home/EducationCard.astro";
+import GitHubActivityCalendar from "@components/home/GitHubActivityCalendar.astro";
+import ProfileHeader from "@components/home/ProfileHeader.astro";
+import Section from "@components/home/Section.astro";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { personalConfig } from "@/config";
+import { url } from "../utils/url-utils";
+---
+
+<MainGridLayout>
+	<main class="mb-8 px-2 md:px-4 max-w-[var(--page-width)] mx-auto w-full">
+		<div id="content" class="axi-home onload-animation">
+			<ProfileHeader />
+			<Section title="About">
+				<p class="text-[var(--axi-muted)] leading-relaxed">
+					{personalConfig.aboutIntro}
+				</p>
+				<a href={url("/about/")} class="axi-btn w-fit self-end mt-2">
+					More about me
+					<span aria-hidden="true">→</span>
+				</a>
+			</Section>
+
+			<Section title="Work">
+				<div class="flex flex-col gap-3">
+					{
+						personalConfig.education.map((entry) => (
+							<EducationCard {...entry} />
+						))
+					}
+				</div>
+			</Section>
+
+			<Section title="Statistics">
+				<BlogStats
+					blogStartDate={new Date(personalConfig.blogStartDate)}
+				/>
+			</Section>
+
+			{
+				personalConfig.githubUsername && (
+					<Section title="Activity">
+						<GitHubActivityCalendar username={personalConfig.githubUsername} />
+					</Section>
+				)
+			}
+		</div>
+	</main>
+</MainGridLayout>

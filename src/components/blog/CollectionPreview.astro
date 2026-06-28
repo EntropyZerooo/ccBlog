@@ -1,0 +1,28 @@
+---
+import { Icon } from "astro-icon/components";
+import type { CollectionConfig } from "@/types/config";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	collection: CollectionConfig;
+}
+
+const { collection } = Astro.props;
+---
+
+<a href={url(collection.href)} class="collection-item group block rounded-lg px-2 py-2 -mx-2 transition-colors hover:bg-[hsl(var(--muted))]">
+	<div class="flex items-start justify-between gap-2">
+		<div class="min-w-0">
+			<div class="font-medium text-sm group-hover:text-[hsl(var(--primary-hsl))] transition-colors">
+				{collection.title}
+			</div>
+			<p class="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+				{collection.description}
+			</p>
+		</div>
+		<Icon
+			name="material-symbols:chevron-right-rounded"
+			class="text-lg shrink-0 text-muted-foreground group-hover:text-[hsl(var(--primary-hsl))] transition-colors"
+		/>
+	</div>
+</a>
