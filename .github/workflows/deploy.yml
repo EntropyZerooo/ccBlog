@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ] # 根据你的主分支名称调整
   workflow_dispatch: # 允许手动触发
+  schedule:
+    # 每天 UTC 时间 00:00（中国时间 08:00）自动构建，确保题目每日更新
+    - cron: '0 0 * * *'
 
 permissions:
   contents: read

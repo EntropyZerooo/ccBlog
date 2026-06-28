@@ -5,8 +5,24 @@ import GitHubActivityCalendar from "@components/home/GitHubActivityCalendar.astr
 import ProfileHeader from "@components/home/ProfileHeader.astro";
 import Section from "@components/home/Section.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+<<<<<<< HEAD
 import { personalConfig } from "@/config";
 import { url } from "../utils/url-utils";
+=======
+import { formatDateToYYYYMMDD, getTodayInChinaTimeZone } from "@utils/date-utils";
+import { getDailyQuestion } from "@utils/question-utils";
+import { Icon } from "astro-icon/components";
+
+const today = getTodayInChinaTimeZone();
+let displayQuestion = await getDailyQuestion(today);
+
+if (!displayQuestion) {
+	throw new Error("没有找到可用的题目");
+}
+
+const { Content } = await displayQuestion.render();
+const dateStr = formatDateToYYYYMMDD(displayQuestion.data.date);
+>>>>>>> aa68c647976547c6cdf737a2a57086bfc0c208f1
 ---
 
 <MainGridLayout>

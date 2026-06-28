@@ -1,0 +1,101 @@
+---
+// 客户端脚本：检查当前日期，如果与显示的题目日期不匹配，则提示更新
+---
+
+<script>
+	(function () {
+		// 获取中国时区的当前日期字符串
+		function getTodayInChinaTimeZone() {
+			const now = new Date();
+			// 获取 UTC 时间戳
+			const utcTimestamp = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+			// 转换为中国时区（UTC+8）的时间戳
+			const chinaTimestamp = utcTimestamp + (8 * 60 * 60 * 1000);
+			// 创建中国时区的日期对象
+			const chinaDate = new Date(chinaTimestamp);
+			// 获取中国时区的年月日
+			const year = chinaDate.getUTCFullYear();
+			const month = chinaDate.getUTCMonth();
+			const day = chinaDate.getUTCDate();
+			// 在本地时区创建一个日期对象，使用中国时区的年月日
+			return new Date(year, month, day);
+		}
+
+		function formatDateToYYYYMMDD(date: Date): string {
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, "0");
+			const day = String(date.getDate()).padStart(2, "0");
+			return `${year}-${month}-${day}`;
+		}
+
+		// 等待页面加载完成
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", checkAndUpdate);
+		} else {
+			checkAndUpdate();
+		}
+
+		async function checkAndUpdate() {
+			try {
+				// 获取当前显示的题目日期
+				const dateElement = document.querySelector(
+					".daily-question-date, [data-question-date]",
+				);
+				if (!dateElement) {
+					// 尝试从页面中提取日期信息
+					const dateText = document.querySelector(
+						".text-sm.text-50, .question-card .text-sm",
+					)?.textContent;
+					if (!dateText) return;
+				}
+
+				const today = getTodayInChinaTimeZone();
+				const todayStr = formatDateToYYYYMMDD(today);
+
+				// 尝试从页面 URL 或数据属性获取显示的日期
+				let displayedDateStr: string | null = null;
+
+				// 方法1: 从 data 属性获取
+				const questionCard = document.querySelector("[data-question-date]");
+				if (questionCard) {
+					displayedDateStr = questionCard.getAttribute("data-question-date");
+				}
+
+				// 方法2: 从 API 加载今天的题目，比较 slug
+				if (!displayedDateStr) {
+					try {
+						const baseUrl = import.meta.env.BASE_URL || "/DailyQuestion/";
+						let apiUrl = baseUrl.replace(/\/$/, "") + "/api/questions.json";
+						if (!apiUrl.startsWith("/")) apiUrl = "/" + apiUrl;
+
+						const response = await fetch(apiUrl);
+						if (response.ok) {
+							const questions = await response.json();
+							const todayQuestion = questions.find((q: any) => q.date === todayStr);
+
+							if (todayQuestion) {
+								// 检查当前页面是否显示的是今天的题目
+								const currentSlug = window.location.pathname
+									.split("/")
+									.filter(Boolean)
+									.pop();
+								if (currentSlug !== todayQuestion.slug) {
+									// 日期不匹配，可以提示用户或自动刷新
+									console.log(
+										"检测到日期不匹配，当前显示的不是今天的题目",
+									);
+									// 可以选择自动刷新页面（会触发重新构建）
+									// window.location.reload();
+								}
+							}
+						}
+					} catch (err) {
+						console.error("检查题目日期失败:", err);
+					}
+				}
+			} catch (error) {
+				console.error("日期检查错误:", error);
+			}
+		}
+	})();
+</script>
