@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { blogCategories } from "@/config";
+import ImageWrapper from "../misc/ImageWrapper.astro";
+import FormattedDate from "./FormattedDate.astro";
+import { getPostUrlBySlug, url } from "@/utils/url-utils";
+
+interface Props {
+	entry: CollectionEntry<"posts">;
+}
+
+const { entry } = Astro.props;
+const { title, description, tags, published, updated, draft, image, category } =
+	entry.data;
+const postUrl = getPostUrlBySlug(entry.slug);
+const postDate = updated ?? published;
+
+const categoryCover = blogCategories.find(
+	(c) => c.category === category,
+)?.cover;
+const coverSrc = image || categoryCover || "";
+const hasCover = !!coverSrc;
+
+const { remarkPluginFrontmatter } = await entry.render();
+const minutesRead =
+	remarkPluginFrontmatter.minutes > 0
+		? `${remarkPluginFrontmatter.minutes} min read`
+		: "< 1 min read";
+---
+
+<li class:list={["post-preview detailed group/card", hasCover && "has-cover"]}>
+	<a
+		href={postUrl}
+		class:list={["post-preview-link", hasCover && "has-cover-link"]}
+	>
+		{
+			hasCover && (
+				<div class="post-preview-cover">
+					<ImageWrapper
+						src={coverSrc}
+						basePath="/"
+						alt=""
+						class="post-preview-cover-img"
+					/>
+				</div>
+			)
+		}
+		<FormattedDate date={postDate} class="post-preview-date" />
+		<div class="post-preview-body">
+			<div class="post-preview-title-row">
+				<div class="post-preview-title">
+					{draft && <span class="text-red-500">(Draft) </span>}
+					{title}
+				</div>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="post-preview-arrow"
+				>
+					<line x1="5" y1="12" x2="19" y2="12"></line>
+					<polyline points="12 5 19 12 12 19"></polyline>
+				</svg>
+			</div>
+			{
+				description && (
+					<p class:list={["post-preview-desc", hasCover && "has-cover-desc"]}>
+						{description}
+					</p>
+				)
+			}
+			<div class="post-preview-meta">
+				<span class="flex items-center gap-1">
+					<Icon name="material-symbols:schedule-outline" class="text-base" />
+					{minutesRead}
+				</span>
+			</div>
+		</div>
+	</a>
+	{
+		tags && tags.length > 0 && (
+			<ul class="post-preview-tags">
+				{tags.map((tag) => (
+					<li>
+						<a
+							href={url(`/archive/?tag=${encodeURIComponent(tag)}`)}
+							class="axi-tag-pill"
+						>
+							{tag}
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</li>

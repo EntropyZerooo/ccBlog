@@ -1,0 +1,82 @@
+---
+import { url as siteUrl } from "../../utils/url-utils";
+
+interface PageUrlInfo {
+	current: string;
+	prev?: string;
+	next?: string;
+	first?: string;
+	last?: string;
+}
+
+interface Props {
+	currentPage: number;
+	lastPage: number;
+	url: PageUrlInfo;
+}
+
+const { currentPage, lastPage, url } = Astro.props;
+
+function getPageNumbers(current: number, last: number): (number | "...")[] {
+	if (last <= 1) return [];
+
+	const delta = 2;
+	const simpleRange: (number | "...")[] = [];
+	const left = current - delta;
+	const right = current + delta + 1;
+	let lastAdded: number | "..." | undefined;
+
+	for (let i = 1; i <= last; i++) {
+		if (i === 1 || i === last || (i >= left && i < right)) {
+			if (
+				lastAdded !== undefined &&
+				typeof lastAdded === "number" &&
+				i > lastAdded + 1
+			) {
+				if (simpleRange[simpleRange.length - 1] !== "...") {
+					simpleRange.push("...");
+				}
+			}
+			simpleRange.push(i);
+			lastAdded = i;
+		}
+	}
+	return simpleRange;
+}
+
+const pageNumbers = getPageNumbers(currentPage, lastPage);
+
+function replacePageInUrl(currentUrl: string, page: number): string {
+	const base = currentUrl.replace(/\/\d+\/?$/, "");
+	const resolved = page === 1 ? base : `${base}/${page}`;
+	return siteUrl(resolved.endsWith("/") ? resolved : `${resolved}/`);
+}
+---
+
+{
+	lastPage > 1 && (
+		<nav class="axi-paginator" aria-label="Pagination">
+			{pageNumbers.map((num) =>
+				typeof num === "number" ? (
+					num === currentPage ? (
+						<span class="axi-page-btn is-current" aria-current="page">
+							{num}
+						</span>
+					) : (
+						<a
+							href={replacePageInUrl(url.current, num)}
+							class="axi-page-btn"
+							aria-label={`Go to page ${num}`}
+						>
+							{num}
+						</a>
+					)
+				) : (
+					<span class="axi-page-btn" aria-hidden="true">
+						...
+					</span>
+				),
+			)}
+		</nav>
+	)
+}

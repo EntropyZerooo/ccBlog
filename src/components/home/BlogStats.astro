@@ -1,0 +1,93 @@
+---
+import { Icon } from "astro-icon/components";
+import { getCollection } from "astro:content";
+import getReadingTime from "reading-time";
+
+interface Props {
+	blogStartDate: Date;
+}
+
+const { blogStartDate } = Astro.props;
+
+const allPosts = await getCollection("posts", ({ data }) =>
+	import.meta.env.PROD ? data.draft !== true : true,
+);
+
+const sortedPosts = allPosts.sort(
+	(a, b) =>
+		new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
+);
+
+const today = new Date();
+const daysDiff = Math.floor(
+	(today.getTime() - blogStartDate.getTime()) / (1000 * 60 * 60 * 24),
+);
+
+const lastUpdated =
+	sortedPosts.length > 0 ? new Date(sortedPosts[0].data.published) : new Date();
+
+let totalWords = 0;
+for (const post of allPosts) {
+	if (post.body) {
+		totalWords += getReadingTime(post.body).words;
+	}
+}
+
+const formatNumber = (num: number) => {
+	if (num >= 10000) return `${Math.round(num / 1000) / 10}w`;
+	if (num >= 1000) return `${Math.round(num / 100) / 10}k`;
+	return num.toString();
+};
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+---
+
+<div class="flex flex-col gap-y-5">
+	<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+		<div class="axi-stat-card group">
+			<Icon
+				name="material-symbols:schedule-outline"
+				class="text-xl text-[var(--axi-muted)] group-hover:text-[var(--primary)] transition-colors"
+			/>
+			<div class="text-center">
+				<div class="text-2xl font-bold group-hover:text-[var(--primary)] transition-colors">
+					{daysDiff}
+				</div>
+				<div class="text-sm text-[var(--axi-muted)]">Days Online</div>
+			</div>
+		</div>
+		<div class="axi-stat-card group">
+			<Icon
+				name="material-symbols:calendar-month-outline"
+				class="text-xl text-[var(--axi-muted)] group-hover:text-[var(--primary)] transition-colors"
+			/>
+			<div class="text-center">
+				<div class="text-sm font-medium group-hover:text-[var(--primary)] transition-colors">
+					{formatDate(lastUpdated)}
+				</div>
+				<div class="text-sm text-[var(--axi-muted)]">Last Updated</div>
+			</div>
+		</div>
+		<div class="axi-stat-card group">
+			<Icon
+				name="material-symbols:article-outline"
+				class="text-xl text-[var(--axi-muted)] group-hover:text-[var(--primary)] transition-colors"
+			/>
+			<div class="text-center">
+				<div class="text-2xl font-bold group-hover:text-[var(--primary)] transition-colors">
+					{formatNumber(totalWords)}
+				</div>
+				<div class="text-sm text-[var(--axi-muted)]">Total Words</div>
+			</div>
+		</div>
+	</div>
+	<div class="flex items-center justify-between text-sm border-t border-[var(--axi-border)] pt-3">
+		<span class="text-[var(--axi-muted)]">Total Posts</span>
+		<span class="font-medium">{allPosts.length}</span>
+	</div>
+</div>

@@ -1,9 +1,10 @@
 ---
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import "@fontsource/noto-sans-sc/chinese-simplified-400.css";
+import "@fontsource/noto-sans-sc/chinese-simplified-500.css";
+import "@fontsource/noto-sans-sc/chinese-simplified-700.css";
+import "../styles/blog-theme.css";
+import "../styles/axi-theme.css";
 
-import CandyRain from "@components/CandyRain.svelte";
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import { profileConfig, siteConfig } from "@/config";
 import {
@@ -74,7 +75,7 @@ const bannerOffset =
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]"
+<html lang={siteLang} class="transition text-[14px] md:text-[16px]"
 	  data-overlayscrollbars-initialize
 >
 	<head>
@@ -152,9 +153,13 @@ const bannerOffset =
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
 		  data-overlayscrollbars-initialize
 	>
+		<div id="site-bg" aria-hidden="true">
+			<div class="bg-orb bg-orb-1"></div>
+			<div class="bg-orb bg-orb-2"></div>
+			<div class="bg-orb bg-orb-3"></div>
+			<div class="bg-grid"></div>
+		</div>
 		<ConfigCarrier></ConfigCarrier>
-		<!-- @ts-expect-error - client:load is an Astro directive, not a component prop -->
-		<CandyRain client:load />
 		<slot />
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->

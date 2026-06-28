@@ -1,52 +1,116 @@
 import type {
+	BlogCategoryConfig,
+	CollectionConfig,
 	ExpressiveCodeConfig,
 	LicenseConfig,
 	NavBarConfig,
+	PersonalConfig,
 	ProfileConfig,
 	SiteConfig,
 } from "./types/config";
+import { LinkPreset } from "./types/config";
+
 export const siteConfig: SiteConfig = {
-	title: "研发规范",
-	subtitle: "提升编程技能",
-	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
+	title: "随想录",
+	subtitle: "技术 · 阅读 · 投资",
+	lang: "zh_CN",
 	themeColor: {
-		hue: 250, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
-		fixed: false, // Hide the theme color picker for visitors
+		hue: 200,
+		fixed: false,
 	},
 	banner: {
-		enable: true,
-		src: "assets/images/demo-avatar.png", // 暗色主题背景图
-		lightSrc: "assets/images/demo-avatar-light.png", // 浅色主题背景图
-		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
+		enable: false,
+		src: "assets/images/demo-avatar.png",
+		lightSrc: "assets/images/demo-avatar-light.png",
+		position: "center",
 		credit: {
-			enable: false, // Display the credit text of the banner image
-			text: "", // Credit text to be displayed
-			url: "", // (Optional) URL link to the original artwork or artist's page
+			enable: false,
+			text: "",
+			url: "",
 		},
 	},
 	toc: {
-		enable: false, // Display the table of contents on the right side of the post
-		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
+		enable: true,
+		depth: 2,
 	},
-	favicon: [
-		// Leave this array empty to use the default favicon
-		// {
-		//   src: '/favicon/icon.png',    // Path of the favicon, relative to the /public directory
-		//   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
-		//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
-		// }
+	favicon: [],
+};
+
+export const blogCategories: BlogCategoryConfig[] = [
+	{
+		slug: "tech",
+		name: "技术",
+		category: "技术心得",
+		cover: "assets/images/demo-banner.png",
+	},
+	{
+		slug: "invest",
+		name: "投资",
+		category: "投资心得",
+		cover: "assets/images/demo-avatar.png",
+	},
+	{
+		slug: "read",
+		name: "阅读",
+		category: "阅读心得",
+		cover: "assets/images/demo-avatar-light.png",
+	},
+];
+
+export const collectionsConfig: CollectionConfig[] = [
+	{
+		title: "技术心得",
+		description: "编程实践、架构思考与工程习惯",
+		href: "/blog/tech/",
+	},
+	{
+		title: "阅读笔记",
+		description: "书籍摘录与阅读反思",
+		href: "/blog/read/",
+	},
+	{
+		title: "投资思考",
+		description: "市场观察与个人理财笔记",
+		href: "/blog/invest/",
+	},
+];
+
+export const navBarConfig: NavBarConfig = {
+	links: [
+		{ name: "Blog", url: "/blog/tech/", dropdown: true },
+		LinkPreset.Archive,
+		LinkPreset.About,
 	],
 };
 
-export const navBarConfig: NavBarConfig = {
-	links: [],
+export const profileConfig: ProfileConfig = {
+	avatar: "assets/images/demo-avatar.png",
+	name: "青菜君",
+	bio: "记录技术心得、阅读感悟与投资思考",
+	links: [
+		{
+			name: "GitHub",
+			url: "https://github.com/cjun666",
+			icon: "fa6-brands:github",
+		},
+	],
 };
 
-export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/demo-avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "每日一题",
-	bio: "每天一道编程题，提升你的编程技能",
-	links: [],
+export const personalConfig: PersonalConfig = {
+	location: "China",
+	githubUsername: "cjun666",
+	email: "",
+	googleScholar: "",
+	blogStartDate: "2024-06-15",
+	aboutIntro:
+		"一名程序员，在这里记录技术实践、阅读感悟与投资思考。欢迎通过 GitHub 交流。",
+	education: [
+		{
+			heading: "Renrui Technology Co., Ltd.",
+			subheading: "Backend R&D Engineer",
+			date: "2023 - Present",
+		},
+	],
 };
 
 export const licenseConfig: LicenseConfig = {
@@ -56,7 +120,7 @@ export const licenseConfig: LicenseConfig = {
 };
 
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
-	// Note: Some styles (such as background color) are being overridden, see the astro.config.mjs file.
-	// Please select a dark theme, as this blog theme currently only supports dark background color
 	theme: "github-dark",
 };
+
+export const blogPageSize = 15;

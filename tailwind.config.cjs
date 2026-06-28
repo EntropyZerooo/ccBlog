@@ -6,7 +6,14 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["Roboto", "sans-serif", ...defaultTheme.fontFamily.sans],
+				sans: [
+					"Satoshi",
+					'"Noto Sans SC"',
+					'"Century Gothic"',
+					'"PingFang SC"',
+					"sans-serif",
+					...defaultTheme.fontFamily.sans,
+				],
 			},
 		},
 	},

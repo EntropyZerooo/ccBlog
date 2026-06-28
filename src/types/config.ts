@@ -55,6 +55,20 @@ export type NavBarLink = {
 	name: string;
 	url: string;
 	external?: boolean;
+	dropdown?: boolean;
+};
+
+export type BlogCategoryConfig = {
+	slug: string;
+	name: string;
+	category: string;
+	cover?: string;
+};
+
+export type CollectionConfig = {
+	title: string;
+	description: string;
+	href: string;
 };
 
 export type NavBarConfig = {
@@ -70,6 +84,23 @@ export type ProfileConfig = {
 		url: string;
 		icon: string;
 	}[];
+};
+
+export type EducationEntry = {
+	heading: string;
+	subheading: string;
+	date: string;
+	href?: string;
+};
+
+export type PersonalConfig = {
+	location?: string;
+	githubUsername?: string;
+	email?: string;
+	googleScholar?: string;
+	blogStartDate: string;
+	aboutIntro: string;
+	education: EducationEntry[];
 };
 
 export type LicenseConfig = {

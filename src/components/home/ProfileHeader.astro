@@ -1,0 +1,75 @@
+---
+import { Icon } from "astro-icon/components";
+import { personalConfig, profileConfig } from "@/config";
+import ImageWrapper from "../misc/ImageWrapper.astro";
+
+const { location, githubUsername, email, googleScholar } = personalConfig;
+---
+
+<section class="axi-profile-header onload-animation" id="content-header">
+	<div class="hidden md:block" aria-hidden="true"></div>
+	<div class="flex flex-row items-start gap-4 sm:gap-5">
+		<div class="axi-avatar shrink-0">
+			<ImageWrapper
+				src={profileConfig.avatar || ""}
+				alt="profile"
+				class="w-full h-full"
+			/>
+		</div>
+		<div class="flex flex-col gap-y-3 min-w-0 pt-0.5">
+			<h1 class="text-2xl sm:text-3xl font-bold font-display leading-tight">
+				{profileConfig.name}
+			</h1>
+			<div class="flex flex-wrap gap-2">
+				{
+					location && (
+						<span class="axi-label">
+							<Icon name="material-symbols:location-on-outline" class="text-base" />
+							{location}
+						</span>
+					)
+				}
+				{
+					githubUsername && (
+						<a
+							class="axi-label axi-label-link"
+							href={`https://github.com/${githubUsername}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="GitHub"
+						>
+							<Icon name="fa6-brands:github" class="text-base" />
+							Github
+						</a>
+					)
+				}
+				{
+					email && (
+						<a
+							class="axi-label axi-label-link"
+							href={`mailto:${email}`}
+							aria-label="Email"
+						>
+							<Icon name="material-symbols:mail-outline" class="text-base" />
+							Email
+						</a>
+					)
+				}
+				{
+					googleScholar && (
+						<a
+							class="axi-label axi-label-link"
+							href={googleScholar}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="Scholar"
+						>
+							<Icon name="material-symbols:school-outline" class="text-base" />
+							Scholar
+						</a>
+					)
+				}
+			</div>
+		</div>
+	</div>
+</section>

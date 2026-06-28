@@ -1,0 +1,153 @@
+---
+import BlogPaginator from "@components/blog/BlogPaginator.astro";
+import BlogSidebar from "@components/blog/BlogSidebar.astro";
+import PostPreview from "@components/blog/PostPreview.astro";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import type { CollectionEntry } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import { blogCategories, blogPageSize } from "@/config";
+import type { BlogCategoryConfig } from "@/types/config";
+import { getSortedPosts } from "@/utils/content-utils";
+import type { Tag } from "@/utils/content-utils";
+import { url } from "@/utils/url-utils";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const sortedPosts = await getSortedPosts();
+
+	return blogCategories.flatMap((catConfig, index) => {
+		const posts = sortedPosts.filter(
+			(p) => p.data.category === catConfig.category,
+		);
+		const prevCat =
+			blogCategories[index === 0 ? blogCategories.length - 1 : index - 1];
+		const nextCat = blogCategories[(index + 1) % blogCategories.length];
+
+		const tagMap = new Map<string, number>();
+		for (const p of posts) {
+			for (const t of p.data.tags) {
+				tagMap.set(t, (tagMap.get(t) ?? 0) + 1);
+			}
+		}
+		const uniqueTags: Tag[] = [...tagMap.entries()]
+			.map(([name, count]) => ({ name, count }))
+			.sort((a, b) => a.name.localeCompare(b.name));
+
+		return paginate(posts, {
+			params: { category: catConfig.slug },
+			pageSize: blogPageSize,
+			props: {
+				catConfig,
+				prevCat,
+				nextCat,
+				uniqueTags,
+				totalInCategory: posts.length,
+			},
+		});
+	});
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"posts">>;
+	catConfig: BlogCategoryConfig;
+	prevCat: BlogCategoryConfig;
+	nextCat: BlogCategoryConfig;
+	uniqueTags: Tag[];
+	totalInCategory: number;
+}
+
+const { page, catConfig, prevCat, nextCat, uniqueTags, totalInCategory } =
+	Astro.props;
+
+const pageUrl = {
+	current: page.url.current,
+	prev: page.url.prev,
+	next: page.url.next,
+	first: page.url.first,
+	last: page.url.last,
+};
+---
+
+<MainGridLayout title={`${catConfig.name} - Blog`}>
+	<main class="mb-10 max-w-[var(--page-width)] mx-auto px-2 md:px-4">
+		<div id="content-header" class="animate mb-6">
+			<div class="flex items-center gap-3">
+				<h1 class="text-3xl font-medium">{catConfig.name}</h1>
+				<div class="category-nav-arrows inline-flex gap-1">
+					<a
+						href={url(`/blog/${prevCat.slug}/`)}
+						title={`Previous: ${prevCat.name}`}
+						aria-label={`Go to ${prevCat.name}`}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<polyline points="18 15 12 9 6 15"></polyline>
+						</svg>
+					</a>
+					<a
+						href={url(`/blog/${nextCat.slug}/`)}
+						title={`Next: ${nextCat.name}`}
+						aria-label={`Go to ${nextCat.name}`}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<polyline points="6 9 12 15 18 9"></polyline>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		{
+			page.data.length === 0 ? (
+				<p class="text-muted-foreground">暂无文章。</p>
+			) : (
+				<div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
+					<section aria-label="Blog posts list" id="content" class="animate">
+						<div class="mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row gap-2">
+							<span class="text-muted-foreground">
+								Page {page.currentPage} - Showing {page.data.length} of{" "}
+								{totalInCategory} posts
+							</span>
+							<a
+								href={url("/archive/")}
+								class="text-muted-foreground hover:text-primary"
+								aria-label="View all posts by years"
+							>
+								View all posts by years →
+							</a>
+						</div>
+						<ul class="flex flex-col gap-y-4 text-start">
+							{page.data.map((entry) => (
+								<PostPreview entry={entry} />
+							))}
+						</ul>
+						<BlogPaginator
+							currentPage={page.currentPage}
+							lastPage={page.lastPage}
+							url={pageUrl}
+						/>
+					</section>
+					<BlogSidebar tags={uniqueTags} />
+				</div>
+			)
+		}
+	</main>
+</MainGridLayout>
